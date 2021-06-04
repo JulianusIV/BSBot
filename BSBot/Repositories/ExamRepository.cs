@@ -18,7 +18,7 @@ namespace BSBot.Repositories
 				DbCommand.CommandText = "INSERT INTO Exams (DueDate, MessageId, Text, Subject) OUTPUT INSERTED.Id VALUES (@date, @message, @text, @subject);";
 				DbCommand.Parameters.Clear();
 				DbCommand.Parameters.AddWithValue("date", entity.DueDate);
-				DbCommand.Parameters.AddWithValue("message", entity.MessageId);
+				DbCommand.Parameters.AddWithValue("message", (long)entity.MessageId);
 				DbCommand.Parameters.AddWithValue("text", entity.Text);
 				DbCommand.Parameters.AddWithValue("subject", entity.Subject);
 				DbConnection.Open();
@@ -56,11 +56,12 @@ namespace BSBot.Repositories
 				DbConnection.Open();
 				using SqlDataReader reader = DbCommand.ExecuteReader();
 				reader.Read();
+				long temp = (long)reader["MessageId"];
 				entity = new Exam
 				{
 					Id = id,
 					DueDate = (DateTime)reader["DueDate"],
-					MessageId = (long)reader["MessageId"],
+					MessageId = (ulong)temp,
 					Subject = (string)reader["Subject"],
 					Text = (string)reader["Text"]
 				};
@@ -93,7 +94,7 @@ namespace BSBot.Repositories
 				DbCommand.CommandText = "UPDATE Exams SET DueDate = @date, MessageId = @message, Text = @text, Subject = @subj WHERE Id = @id;";
 				DbCommand.Parameters.Clear();
 				DbCommand.Parameters.AddWithValue("date", entity.DueDate);
-				DbCommand.Parameters.AddWithValue("message", entity.MessageId);
+				DbCommand.Parameters.AddWithValue("message", (long)entity.MessageId);
 				DbCommand.Parameters.AddWithValue("text", entity.Text);
 				DbCommand.Parameters.AddWithValue("subj", entity.Subject);
 				DbCommand.Parameters.AddWithValue("id", entity.Id);
