@@ -9,6 +9,47 @@ namespace BSBot.Repositories
 	{
 		public ExamRepository(string connectionString) : base(connectionString) { }
 
+		public bool GetByMessageId(ulong messageId, out Exam entity)
+		{
+			bool result = false;
+			entity = null;
+
+			try
+			{
+				DbCommand.CommandText = "SELECT * FROM Exams WHERE MessageId = @id;";
+				DbCommand.Parameters.Clear();
+				DbCommand.Parameters.AddWithValue("id", (long)messageId);
+				DbConnection.Open();
+				using SqlDataReader reader = DbCommand.ExecuteReader();
+				reader.Read();
+				entity = new Exam
+				{
+					Id = (int)reader["ID"],
+					DueDate = (DateTime)reader["DueDate"],
+					MessageId = messageId,
+					Subject = (string)reader["Subject"],
+					Text = (string)reader["Text"]
+				};
+				DbConnection.Close();
+
+				result = true;
+			}
+			catch (Exception e)
+			{
+				//TODO: add logging
+				Debug.WriteLine(e.Message);
+			}
+			finally
+			{
+				if (DbConnection.State == System.Data.ConnectionState.Open)
+				{
+					DbConnection.Close();
+				}
+			}
+
+			return result;
+		}
+
 		public bool Create(ref Exam entity)
 		{
 			bool result = false;

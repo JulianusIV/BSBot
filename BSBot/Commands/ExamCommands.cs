@@ -48,5 +48,23 @@ namespace BSBot.Commands
 			}
 			await ctx.RespondAsync("Done!");
 		}
+
+		[Command("delete")]
+		public async Task Delete(CommandContext ctx, DiscordMessage messageLink)
+		{
+			ExamRepository repo = new ExamRepository(Bot.Instance.ConfigJson.ConnectionString);
+			if (!repo.GetByMessageId(messageLink.Id, out Exam entity))
+			{
+				await ctx.RespondAsync("There was a problem reading from the database!");
+				return;
+			}
+			if (!repo.Delete(entity.Id))
+			{
+				await ctx.RespondAsync("There was a problem deleting the entry from the database!");
+				return;
+			}
+			await messageLink.DeleteAsync();
+			await ctx.RespondAsync("Done!");
+		}
 	}
 }
