@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace BSBot
 {
@@ -32,6 +33,8 @@ namespace BSBot
 
 		public ConfigJson ConfigJson { get; set; }
 
+		public Timer Timer = new Timer(100);//86400000); //one day
+
 		public async Task RunAsync()
 		{
 			string json = File.ReadAllText("config.json");
@@ -57,11 +60,16 @@ namespace BSBot
 			Commands = Client.UseCommandsNext(commandsConfig);
 
 			//Register command modules
+			Commands.RegisterConverter(new DateArgumentConverter());
 			Commands.RegisterCommands(typeof(Bot).GetTypeInfo().Assembly);
 
 			//Register command events
 
 			await Client.ConnectAsync();
+
+			//Timer events and start
+			Timer.Elapsed += TimerMethods.Tick;
+			Timer.Start();
 
 			//Delay Task forever (-1) to keep program running while waiting for events
 			await Task.Delay(-1);

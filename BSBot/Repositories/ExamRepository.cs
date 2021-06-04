@@ -1,5 +1,6 @@
 ﻿using BSBot.Objects;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 
@@ -8,6 +9,49 @@ namespace BSBot.Repositories
 	public class ExamRepository : BaseRepository
 	{
 		public ExamRepository(string connectionString) : base(connectionString) { }
+
+		public bool GetAll(out List<Exam> list)
+		{
+			bool result = false;
+			list = null;
+
+			try
+			{
+				DbCommand.CommandText = "SELECT * FROM Exams;";
+				DbCommand.Parameters.Clear();
+				DbConnection.Open();
+				using SqlDataReader reader = DbCommand.ExecuteReader();
+				list = new List<Exam>();
+				while (reader.Read())
+				{
+					list.Add(new Exam
+					{
+						Id = (int)reader["Id"],
+						DueDate = Date.Parse((string)reader["DueDate"]),
+						MessageId = (ulong)(long)reader["MessageId"],
+						Subject = (string)reader["Subject"],
+						Text = (string)reader["Text"]
+					});
+				}
+				DbConnection.Close();
+
+				result = true;
+			}
+			catch (Exception e)
+			{
+				//TODO: add logging
+				Debug.WriteLine(e.Message);
+			}
+			finally
+			{
+				if (DbConnection.State == System.Data.ConnectionState.Open)
+				{
+					DbConnection.Close();
+				}
+			}
+
+			return result;
+		}
 
 		public bool GetByMessageId(ulong messageId, out Exam entity)
 		{
@@ -25,7 +69,7 @@ namespace BSBot.Repositories
 				entity = new Exam
 				{
 					Id = (int)reader["ID"],
-					DueDate = (DateTime)reader["DueDate"],
+					DueDate = Date.Parse((string)reader["DueDate"]),
 					MessageId = messageId,
 					Subject = (string)reader["Subject"],
 					Text = (string)reader["Text"]
@@ -58,7 +102,7 @@ namespace BSBot.Repositories
 			{
 				DbCommand.CommandText = "INSERT INTO Exams (DueDate, MessageId, Text, Subject) OUTPUT INSERTED.Id VALUES (@date, @message, @text, @subject);";
 				DbCommand.Parameters.Clear();
-				DbCommand.Parameters.AddWithValue("date", entity.DueDate);
+				DbCommand.Parameters.AddWithValue("date", entity.DueDate.ToString());
 				DbCommand.Parameters.AddWithValue("message", (long)entity.MessageId);
 				DbCommand.Parameters.AddWithValue("text", entity.Text);
 				DbCommand.Parameters.AddWithValue("subject", entity.Subject);
@@ -101,7 +145,7 @@ namespace BSBot.Repositories
 				entity = new Exam
 				{
 					Id = id,
-					DueDate = (DateTime)reader["DueDate"],
+					DueDate = Date.Parse((string)reader["DueDate"]),
 					MessageId = (ulong)temp,
 					Subject = (string)reader["Subject"],
 					Text = (string)reader["Text"]
@@ -134,7 +178,7 @@ namespace BSBot.Repositories
 			{
 				DbCommand.CommandText = "UPDATE Exams SET DueDate = @date, MessageId = @message, Text = @text, Subject = @subj WHERE Id = @id;";
 				DbCommand.Parameters.Clear();
-				DbCommand.Parameters.AddWithValue("date", entity.DueDate);
+				DbCommand.Parameters.AddWithValue("date", entity.DueDate.ToString());
 				DbCommand.Parameters.AddWithValue("message", (long)entity.MessageId);
 				DbCommand.Parameters.AddWithValue("text", entity.Text);
 				DbCommand.Parameters.AddWithValue("subj", entity.Subject);

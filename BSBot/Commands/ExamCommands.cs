@@ -12,9 +12,9 @@ namespace BSBot.Commands
 	public class ExamCommands : BaseCommandModule
 	{
 		[Command("new")]
-		public async Task New(CommandContext ctx, DateTime date, string subject, [RemainingText]string text)
+		public async Task New(CommandContext ctx, Date date, string subject, [RemainingText]string text)
 		{
-			if (date < DateTime.Now)
+			if (date < Date.FromDateTime(DateTime.Now))
 			{
 				await ctx.RespondAsync("Date has to be in the future!");
 				return;
@@ -25,11 +25,11 @@ namespace BSBot.Commands
 				Title = $"Klassenarbeit in {subject}:",
 				Description = text +
 					Environment.NewLine +
-					date.ToString("yyyy-MM-dd"),
-				Color = DiscordColor.Red
+					date.ToString(),
+				Color = DiscordColor.Orange
 			};
 
-			DiscordMessage message = await ctx.Guild.GetChannel(747431696755851355).SendMessageAsync(builder);
+			DiscordMessage message = await ctx.Guild.GetChannel(512370308976607250).SendMessageAsync(builder);//747431696755851355).SendMessageAsync(builder);
 
 			Exam exam = new Exam
 			{
