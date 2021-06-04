@@ -33,8 +33,8 @@ namespace BSBot
 							Debug.WriteLine("There was a problem deleting an entry from the database!");
 							continue;
 						}
-						DiscordGuild guild = await Bot.Instance.Client.GetGuildAsync(512370308532142091);//747429821830922302);
-						DiscordMessage message = await guild.GetChannel(512370308976607250).GetMessageAsync(item.MessageId);//747431696755851355).GetMessageAsync(item.MessageId);
+						DiscordGuild guild = await Bot.Instance.Client.GetGuildAsync(747429821830922302);
+						DiscordMessage message = await guild.GetChannel(747431696755851355).GetMessageAsync(item.MessageId);
 						DiscordEmbedBuilder builder = new DiscordEmbedBuilder
 						{
 							Title = $"Klassenarbeit in {item.Subject}:",
@@ -47,8 +47,8 @@ namespace BSBot
 					}
 					else if (item.DueDate <= Date.FromDateTime(DateTime.Now + TimeSpan.FromDays(1)))
 					{
-						DiscordGuild guild = await Bot.Instance.Client.GetGuildAsync(512370308532142091);//747429821830922302);
-						DiscordMessage message = await guild.GetChannel(512370308976607250).GetMessageAsync(item.MessageId);//747431696755851355).GetMessageAsync(item.MessageId);
+						DiscordGuild guild = await Bot.Instance.Client.GetGuildAsync(747429821830922302);
+						DiscordMessage message = await guild.GetChannel(747431696755851355).GetMessageAsync(item.MessageId);
 						DiscordEmbedBuilder builder = new DiscordEmbedBuilder
 						{
 							Title = $"Klassenarbeit in {item.Subject}:",

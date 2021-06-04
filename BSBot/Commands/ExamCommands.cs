@@ -14,6 +14,8 @@ namespace BSBot.Commands
 		[Command("new")]
 		public async Task New(CommandContext ctx, Date date, string subject, [RemainingText]string text)
 		{
+			if (ctx.Channel.Id != 850501999882928158)
+				return;
 			if (date < Date.FromDateTime(DateTime.Now))
 			{
 				await ctx.RespondAsync("Date has to be in the future!");
@@ -29,7 +31,7 @@ namespace BSBot.Commands
 				Color = DiscordColor.Orange
 			};
 
-			DiscordMessage message = await ctx.Guild.GetChannel(512370308976607250).SendMessageAsync(builder);//747431696755851355).SendMessageAsync(builder);
+			DiscordMessage message = await ctx.Guild.GetChannel(747431696755851355).SendMessageAsync(builder);
 
 			Exam exam = new Exam
 			{
@@ -52,6 +54,8 @@ namespace BSBot.Commands
 		[Command("delete")]
 		public async Task Delete(CommandContext ctx, DiscordMessage messageLink)
 		{
+			if (ctx.Channel.Id != 850501999882928158)
+				return;
 			ExamRepository repo = new ExamRepository(Bot.Instance.ConfigJson.ConnectionString);
 			if (!repo.GetByMessageId(messageLink.Id, out Exam entity))
 			{
