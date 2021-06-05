@@ -31,7 +31,7 @@ namespace BSBot.Commands
 				Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail { Url = ctx.Client.CurrentUser.AvatarUrl }
 			};
 			discordEmbed.AddField("Language", "C# using Visual Studio 2019");
-			discordEmbed.AddField("Library", "DSharpPlus, Version:" + ctx.Client.VersionString);
+			discordEmbed.AddField("Library", "DSharpPlus, Version: " + ctx.Client.VersionString);
 			discordEmbed.AddField(".NET Core Version: ", PlatformServices.Default.Application.RuntimeFramework.Version.ToString(2));
 			discordEmbed.AddField("Repository", "[GitHub](https://github.com/JulianusIV/BSBot)");
 			TimeSpan uptime = DateTime.Now - Bot.Instance.StartTime;

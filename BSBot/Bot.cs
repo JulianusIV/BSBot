@@ -1,7 +1,11 @@
-﻿using DSharpPlus;
+﻿using BSBot.Objects;
+using BSBot.Repositories;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -58,6 +62,7 @@ namespace BSBot
 
 			//Register client events
 			Client.Ready += Client_Ready;
+			Client.MessageDeleted += Client_MessageDeleted;
 
 			CommandsNextConfiguration commandsConfig = new CommandsNextConfiguration
 			{
@@ -82,7 +87,7 @@ namespace BSBot
 			await Task.Delay(-1);
 		}
 
-		private Task Client_Ready(DiscordClient sender, DSharpPlus.EventArgs.ReadyEventArgs e)
+		private Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
 		{
 			DiscordActivity activity = new DiscordActivity
 			{
@@ -91,6 +96,30 @@ namespace BSBot
 				StreamUrl = "https://twitch.tv/test"
 			};
 			Client.UpdateStatusAsync(activity);
+			return Task.CompletedTask;
+		}
+
+		private Task Client_MessageDeleted(DiscordClient sender, MessageDeleteEventArgs e)
+		{
+			_ = Task.Run(() =>
+			{
+				if (e.Message.Channel.Id == 747431696755851355)
+				{
+					ExamRepository repo = new ExamRepository(ConfigJson.ConnectionString);
+					if (!repo.GetByMessageId(e.Message.Id, out Exam entity))
+					{
+						//TODO: add logging
+						Debug.WriteLine("There was a problem reading a database entry! " + e.Message.Id);
+						return;
+					}
+					if (!repo.Delete(entity.Id))
+					{
+						//TODO: add logging
+						Debug.WriteLine("There was a problem deleting a database entry! " + e.Message.Id);
+						return;
+					}
+				}
+			});
 			return Task.CompletedTask;
 		}
 	}

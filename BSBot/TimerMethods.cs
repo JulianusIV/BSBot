@@ -13,7 +13,6 @@ namespace BSBot
 	{
 		internal static void Tick(object sender, ElapsedEventArgs e)
 		{
-			((Timer)sender).Stop();
 			_ = Task.Run(async () =>
 			{
 				ExamRepository repo = new ExamRepository(Bot.Instance.ConfigJson.ConnectionString);
