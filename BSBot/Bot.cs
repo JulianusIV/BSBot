@@ -1,5 +1,7 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -33,10 +35,14 @@ namespace BSBot
 
 		public ConfigJson ConfigJson { get; set; }
 
-		public Timer Timer = new Timer(100);//86400000); //one day
+		public Timer Timer = new Timer(86400000); //one day
+
+		public DateTime StartTime { get; private set; }
 
 		public async Task RunAsync()
 		{
+			StartTime = DateTime.Now;
+
 			string json = File.ReadAllText("config.json");
 			ConfigJson = JsonSerializer.Deserialize<ConfigJson>(json);
 
@@ -51,6 +57,7 @@ namespace BSBot
 			Client = new DiscordClient(config);
 
 			//Register client events
+			Client.Ready += Client_Ready;
 
 			CommandsNextConfiguration commandsConfig = new CommandsNextConfiguration
 			{
@@ -73,6 +80,18 @@ namespace BSBot
 
 			//Delay Task forever (-1) to keep program running while waiting for events
 			await Task.Delay(-1);
+		}
+
+		private Task Client_Ready(DiscordClient sender, DSharpPlus.EventArgs.ReadyEventArgs e)
+		{
+			DiscordActivity activity = new DiscordActivity
+			{
+				ActivityType = ActivityType.Streaming,
+				Name = "your IP adress.",
+				StreamUrl = "https://twitch.tv/test"
+			};
+			Client.UpdateStatusAsync(activity);
+			return Task.CompletedTask;
 		}
 	}
 }

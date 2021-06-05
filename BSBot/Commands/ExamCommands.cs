@@ -9,16 +9,26 @@ using System.Threading.Tasks;
 namespace BSBot.Commands
 {
 	[Group("exam")]
+	[Description("Command group for handling exams")]
 	public class ExamCommands : BaseCommandModule
 	{
 		[Command("new")]
-		public async Task New(CommandContext ctx, Date date, string subject, [RemainingText]string text)
+		[Description("Create a new exam")]
+		public async Task New(CommandContext ctx,
+			[Description("The day of the exam, Format: yyyy.MM.dd or dd.MM.yyyy")]Date date,
+			[Description("Subject of the exam (max 10 chars)")]string subject,
+			[Description("Free text, for example topics.")][RemainingText]string text)
 		{
 			if (ctx.Channel.Id != 850501999882928158)
 				return;
 			if (date < Date.FromDateTime(DateTime.Now))
 			{
 				await ctx.RespondAsync("Date has to be in the future!");
+				return;
+			}
+			if (subject.Length > 10)
+			{
+				await ctx.RespondAsync("Max length of the subject is 10 chars!");
 				return;
 			}
 
@@ -52,7 +62,8 @@ namespace BSBot.Commands
 		}
 
 		[Command("delete")]
-		public async Task Delete(CommandContext ctx, DiscordMessage messageLink)
+		[Description("Delete an existing exam")]
+		public async Task Delete(CommandContext ctx, [Description("Link to the message")]DiscordMessage messageLink)
 		{
 			if (ctx.Channel.Id != 850501999882928158)
 				return;
