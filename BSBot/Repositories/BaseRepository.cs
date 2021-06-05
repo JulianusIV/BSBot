@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Data.SqlClient;
 
 namespace BSBot.Repositories
 {

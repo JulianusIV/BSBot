@@ -1,16 +1,18 @@
-﻿using BSBot.Objects;
-using BSBot.Repositories;
+﻿using System;
+using System.IO;
+using System.Timers;
+using System.Text.Json;
+using System.Reflection;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
 using DSharpPlus;
-using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Timers;
+using DSharpPlus.CommandsNext;
+
+using BSBot.Objects;
+using BSBot.Repositories;
 
 namespace BSBot
 {

@@ -1,11 +1,11 @@
-﻿using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using Microsoft.Extensions.PlatformAbstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.PlatformAbstractions;
+
+using DSharpPlus.Entities;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 
 namespace BSBot.Commands
 {
@@ -19,13 +19,14 @@ namespace BSBot.Commands
 		}
 
 		[Command("info")]
+		[Aliases("about")]
 		[Description("Display some info about the bot")]
 		public async Task Info(CommandContext ctx)
 		{
 			DiscordEmbedBuilder discordEmbed = new DiscordEmbedBuilder
 			{
-				Color = new DiscordColor(101, 24, 201),
-				Title = "LathBot#1753",
+				Color = DiscordColor.MidnightBlue,
+				Title = "BSBot#1974",
 				Description = $"BSBot is a custom bot for the server BSIT20, prefix is / or {ctx.Client.CurrentUser.Mention}\n" +
 					"For more info use /help",
 				Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail { Url = ctx.Client.CurrentUser.AvatarUrl }

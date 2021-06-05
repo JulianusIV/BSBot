@@ -1,11 +1,13 @@
-﻿using BSBot.Objects;
-using BSBot.Repositories;
-using DSharpPlus.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Timers;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Timers;
+using System.Collections.Generic;
+
+using DSharpPlus.Entities;
+
+using BSBot.Objects;
+using BSBot.Repositories;
 
 namespace BSBot
 {
